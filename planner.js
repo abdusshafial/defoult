@@ -1,6 +1,5 @@
 "use strict";
 
-const storageKey = "bachelor-life-planner-v1";
 const get = (id) => document.getElementById(id);
 const today = () => dayKey(new Date());
 const selections = { daily: today(), weekly: monday(today()), expenses: today().slice(0, 7) };
@@ -20,21 +19,38 @@ let view = "daily";
 let pendingEdit;
 let pendingDelete;
 let state;
+let plannerSession;
 
-try {
-  state = readPlanner(localStorage.getItem(storageKey));
-} catch {
-  state = initialPlanner();
-  get("storage-notice").hidden = false;
+function beginPlannerSession(session) {
+  plannerSession = session;
+  state = readPlanner(session.raw);
+  view = "daily";
+  selections.daily = currentKey();
+  selections.weekly = monday(today());
+  selections.expenses = today().slice(0, 7);
+  get("storage-notice").hidden = true;
+  render();
+}
+
+function clearPlannerSession() {
+  plannerSession = undefined;
+  state = undefined;
+  pendingEdit = undefined;
+  pendingDelete = undefined;
+  get("entries").replaceChildren();
+  get("summary").replaceChildren();
+}
+
+async function endPlannerSession() {
+  await plannerSession.flush();
+  clearPlannerSession();
 }
 
 function save() {
-  try {
-    localStorage.setItem(storageKey, JSON.stringify(state));
-    get("storage-notice").hidden = true;
-  } catch {
-    get("storage-notice").hidden = false;
-  }
+  plannerSession.write(JSON.stringify(state)).then(
+    () => { get("storage-notice").hidden = true; },
+    () => { get("storage-notice").hidden = false; }
+  );
 }
 
 function node(tag, text, className) {
@@ -303,4 +319,3 @@ get("cancel-edit").addEventListener("click", () => editor.close());
 get("previous").addEventListener("click", () => changePeriod(-1));
 get("current").addEventListener("click", () => changePeriod(0));
 get("next").addEventListener("click", () => changePeriod(1));
-render();
