@@ -47,8 +47,21 @@ const plannerVault = (() => {
     return JSON.stringify({ version: 1, name: profile.name, salt: profile.salt, iv: encode(iv), payload: encode(new Uint8Array(bytes)) });
   }
 
-  function exclusive(task) {
-    return navigator.locks ? navigator.locks.request(vaultKey, task) : task();
+  async function exclusive(task) {
+    let started = false;
+    try {
+      const locks = navigator.locks;
+      if (typeof locks?.request === "function") {
+        return await locks.request(vaultKey, () => {
+          started = true;
+          return task();
+        });
+      }
+    } catch (error) {
+      const unavailable = ["SecurityError", "NotAllowedError", "NotSupportedError"].includes(error.name);
+      if (started || !unavailable) throw error;
+    }
+    return task();
   }
 
   function session(profile, key, raw, current) {

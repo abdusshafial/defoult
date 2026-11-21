@@ -116,12 +116,20 @@
     if (busy || submit.disabled) return;
     const name = profileName.value.trim();
     const secret = password.value;
-    if (!record && (name.length < 2 || secret.length < 8)) {
-      message("অন্তত ২ অক্ষরের নাম এবং ৮ অক্ষরের পাসওয়ার্ড দিন।");
+    if (!record && name.length < 2) {
+      message("অন্তত ২ অক্ষরের নাম লিখুন।");
+      profileName.focus();
       return;
     }
+    if (!secret || (!record && secret.length < 8)) {
+      message(record ? "পাসওয়ার্ড লিখুন।" : "অন্তত ৮ অক্ষরের পাসওয়ার্ড দিন।");
+      password.focus();
+      return;
+    }
+    const idleLabel = submit.textContent;
     busy = true;
     submit.disabled = back.disabled = true;
+    submit.textContent = "খোলা হচ্ছে…";
     message("");
     try {
       const migrate = !byId("restore-label").hidden && byId("restore-data").checked;
@@ -140,6 +148,7 @@
       password.select();
     } finally {
       busy = false;
+      submit.textContent = idleLabel;
       submit.disabled = back.disabled = false;
     }
   });

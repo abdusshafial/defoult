@@ -11,8 +11,8 @@
 <script src="routine.js" defer></script>
 <script src="planner.js" defer></script>
 <script src="night-scene.js" defer></script>
-<script src="vault.js" defer></script>
-<script src="night.js" defer></script>
+<script src="vault.js?v=2" defer></script>
+<script src="night.js?v=2" defer></script>
 </head>
 <body>
 <section id="night" class="night" aria-labelledby="night-title" data-lit="false">
@@ -35,7 +35,7 @@
     <section id="login-panel" class="night-card" aria-labelledby="login-title" hidden>
       <h2 id="login-title"></h2>
       <p id="account-copy">এই ব্রাউজারে আপনার রুটিন ও খরচ সেভ থাকবে।</p>
-      <form id="login-form">
+      <form id="login-form" novalidate>
         <label id="name-label">আপনার নাম<input id="profile-name" autocomplete="username" maxlength="48" required></label>
         <label>পাসওয়ার্ড<input id="profile-password" type="password" maxlength="128" required></label>
         <label class="restore-choice" id="restore-label" hidden><input id="restore-data" type="checkbox" checked>আগের রুটিন এই প্রোফাইলে নিন</label>
