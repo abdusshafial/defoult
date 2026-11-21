@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#24213d">
+<meta name="description" content="ব্যাচেলর জীবনের সকাল থেকে রাতের রুটিন, সাপ্তাহিক কাজ আর মাসিক খরচ এক জায়গায়।">
+<title>ব্যাচেলর লাইফ · রুটিন প্ল্যানার</title>
+<link rel="stylesheet" href="style.css">
+<script src="routine.js" defer></script>
+<script src="planner.js" defer></script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-inner">
+    <a class="brand" href="./index.html"><span aria-hidden="true">⌂</span>ব্যাচেলর লাইফ</a>
+    <nav class="tabs" aria-label="প্ল্যানারের বিভাগ">
+      <button type="button" data-view="daily" aria-pressed="true">দৈনিক রুটিন</button>
+      <button type="button" data-view="weekly" aria-pressed="false">সাপ্তাহিক কাজ</button>
+      <button type="button" data-view="expenses" aria-pressed="false">মাসিক খরচ</button>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  <section class="hero" aria-labelledby="page-title">
+    <div>
+      <p id="period-label" class="period"></p>
+      <h1 id="page-title">আজকের রুটিন</h1>
+      <p id="page-description"></p>
+    </div>
+    <button type="button" class="primary" id="add-item"><span aria-hidden="true">+</span> কাজ যোগ করুন</button>
+  </section>
+  <p class="storage-notice" id="storage-notice" role="status" hidden>এই ব্রাউজারে তথ্য সেভ করা যাচ্ছে না। পেজ বন্ধ করলে বর্তমান পরিবর্তনগুলো হারিয়ে যেতে পারে।</p>
+  <div class="content-grid">
+    <section aria-label="নির্বাচিত সময়ের তালিকা">
+      <div class="period-nav" aria-label="সময় বদলান">
+        <button type="button" id="previous"></button>
+        <button type="button" id="current"></button>
+        <button type="button" id="next"></button>
+      </div>
+      <div id="entries"></div>
+    </section>
+    <aside id="summary" class="summary" aria-label="অগ্রগতি ও হিসাব"></aside>
+  </div>
+</main>
+<template id="entry-template">
+  <li class="entry">
+    <input class="check" type="checkbox">
+    <div class="entry-copy"><strong></strong><small></small></div>
+    <div class="entry-actions">
+      <button class="edit" type="button">বদলান</button>
+      <button class="remove" type="button">মুছুন</button>
+    </div>
+  </li>
+</template>
+<dialog id="editor" aria-labelledby="editor-title">
+  <form id="edit-form">
+    <h2 id="editor-title"></h2>
+    <fieldset id="task-fields">
+      <label>কাজের নাম<input id="task-title" maxlength="75" required></label>
+      <label>সময়<input type="time" id="task-time" required></label>
+    </fieldset>
+    <fieldset id="weekly-fields" hidden disabled>
+      <label>কাজের নাম<input id="weekly-title" maxlength="75" required></label>
+      <label>যেদিন করতে চান<select id="weekly-day"></select></label>
+    </fieldset>
+    <fieldset id="expense-fields" hidden disabled>
+      <label>খরচের তারিখ<input type="date" id="expense-date" required></label>
+      <label>খরচের ধরন<select id="expense-category"></select></label>
+      <label>টাকা<input id="expense-amount" inputmode="decimal" maxlength="16" placeholder="যেমন ২৫০" required></label>
+      <label>বিবরণ (ঐচ্ছিক)<input id="expense-note" maxlength="90" placeholder="যেমন চাল ও ডিম"></label>
+    </fieldset>
+    <fieldset id="budget-fields" hidden disabled>
+      <label>এই মাসের বাজেট<input id="budget-amount" inputmode="decimal" maxlength="16" placeholder="যেমন ১২০০০" required></label>
+    </fieldset>
+    <p id="form-error" class="form-error" role="alert" hidden></p>
+    <div class="dialog-buttons"><button type="button" id="cancel-edit">বাতিল</button><button type="submit" class="primary">সেভ করুন</button></div>
+  </form>
+</dialog>
+<dialog id="delete-dialog" aria-labelledby="delete-title">
+  <form method="dialog">
+    <h2 id="delete-title">তালিকা থেকে মুছবেন?</h2>
+    <p id="delete-copy"></p>
+    <div class="dialog-buttons"><button value="cancel" autofocus>বাতিল</button><button value="delete" class="danger">মুছুন</button></div>
+  </form>
+</dialog>
+</body>
+</html>
